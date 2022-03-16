@@ -9,6 +9,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     pin = models.CharField(max_length=10, null=False, blank=False, unique=True)
     phone_number = models.CharField(max_length=10, null=False, blank=False)
+    email = models.EmailField(unique=True, null=False, blank=False)
     pass
 
     def __str__(self) -> str:
@@ -20,7 +21,7 @@ class Car(models.Model):
     model = models.CharField(max_length=100, null=False, blank=False)
     year = models.DateField(null=False, blank=False)
     seats = models.IntegerField(null=False, blank=False)
-    description = models.TextField()
+    description = models.TextField(null=False, blank=False)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))], null=False, blank=False)
 
     def __str__(self) -> str:
@@ -28,10 +29,10 @@ class Car(models.Model):
 
 class Application(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, null=False, blank=False)
+    start_date = models.DateField(null=False, blank=False)
+    end_date = models.DateField(null=False, blank=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     
     def __str__(self) -> str:
         return f"{self.car} - {self.user}"
