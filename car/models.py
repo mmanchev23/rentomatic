@@ -25,3 +25,13 @@ class Car(models.Model):
 
     def __str__(self) -> str:
         return f"{self.brand} {self.model} {self.year}"
+
+class Application(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def __str__(self) -> str:
+        return f"{self.car} - {self.user}"
