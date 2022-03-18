@@ -1,66 +1,69 @@
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Sign up for an account ...</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <div class="row">
-            <div class="col">
-              <label>First name</label>
-              <input type="text" class="form-control" id="first_name" placeholder="John">
+      <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sign up for an account ...</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <label>First name</label>
+                <input type="text" class="form-control" id="first_name" placeholder="John" name="first_name">
+              </div>
+              <div class="col">
+                <label>Last name</label>
+                <input type="text" class="form-control" id="last_name" placeholder="Doe" name="last_name">
+              </div>
             </div>
-            <div class="col">
-              <label>Last name</label>
-              <input type="text" class="form-control" id="last_name" placeholder="Doe">
+          </div>
+          <br>
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <label>Username</label>
+                <input type="text" class="form-control" id="username" placeholder="johndoe" name="username">
+              </div>
+              <div class="col">
+                <label>Email</label>
+                <input type="email" class="form-control" id="email" placeholder="johndoe@example.com" name="email">
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <label>PIN</label>
+                <input type="number" class="form-control" id="PIN" placeholder="**********" name="pin">
+              </div>
+              <div class="col">
+                <label>Phone number</label>
+                <input type="tel" class="form-control" id="phone_number" placeholder="**********" name="phone_number">
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <label>Password</label>
+                <input type="password" class="form-control" id="password" placeholder="**********" name="password">
+              </div>
+              <div class="col">
+                <label>Confirm password</label>
+                <input type="password" class="form-control" id="confirm_password" placeholder="**********" name="confirm_password">
+              </div>
             </div>
           </div>
         </div>
-        <br>
-        <div class="form-group">
-          <div class="row">
-            <div class="col">
-              <label>Username</label>
-              <input type="text" class="form-control" id="username" placeholder="johndoe">
-            </div>
-            <div class="col">
-              <label>Email</label>
-              <input type="email" class="form-control" id="email" placeholder="johndoe@example.com">
-            </div>
-          </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success"><i class="fa fa-user-plus"></i> Register</button>
         </div>
-        <br>
-        <div class="form-group">
-          <div class="row">
-            <div class="col">
-              <label>PIN</label>
-              <input type="number" class="form-control" id="PIN" placeholder="**********">
-            </div>
-            <div class="col">
-              <label>Phone number</label>
-              <input type="tel" class="form-control" id="phone_number" placeholder="**********">
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="form-group">
-          <div class="row">
-            <div class="col">
-              <label>Password</label>
-              <input type="password" class="form-control" id="password" placeholder="**********">
-            </div>
-            <div class="col">
-              <label>Confirm password</label>
-              <input type="password" class="form-control" id="confirm_password" placeholder="**********">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success"><i class="fa fa-user-plus"></i> Register</button>
-      </div>
+      </form>
     </div>
   </div>
 </div>
