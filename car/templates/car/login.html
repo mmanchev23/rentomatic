@@ -1,24 +1,27 @@
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Sign in your account ...</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-content">
+        <form action="{% url 'login' %}" method="post">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Sign in your account ...</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" class="form-control" id="username" placeholder="johndoe" name="username">
+            </div>
+            <br>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="password" placeholder="********" name="password">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Submit</button>
+          </div>
+        </form>
       </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Username</label>
-          <input type="text" class="form-control" id="username" placeholder="johndoe">
-        </div>
-        <br>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" class="form-control" id="password" placeholder="********">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success"><i class="fa fa-sign-in"></i> Submit</button>
-      </div>
-    </div>
   </div>
 </div>
