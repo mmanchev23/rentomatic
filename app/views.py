@@ -147,9 +147,187 @@ def logout_view(request):
 @login_required(redirect_field_name="/")
 def profile(request, username):
     user = User.objects.get(username=username) or None
+    profile = User.objects.get(pk=request.user.pk) or None
+
+    likes = ProfileLike.objects.filter(user=user) or None
+    like = ProfileLike.objects.filter(user=user, profile=profile) or None
+
+    followers = ProfileFollower.objects.filter(user=user) or None
+    follower = ProfileFollower.objects.filter(user=user, profile=profile) or None
+
+    followings = ProfileFollower.objects.filter(profile=user) or None
 
     context = {
         "user": user,
+
+        "likes": likes,
+        "like": like,
+
+        "followers": followers,
+        "follower": follower,
+
+        "followings": followings,
     }
 
     return render(request, "app/profile.html", context)
+
+@login_required(redirect_field_name="/")
+def like_profile(request, username):
+    user = User.objects.get(username=username) or None
+    profile = User.objects.get(pk=request.user.pk) or None
+    like = ProfileLike.objects.create(user=user, profile=profile)
+    messages.success(request, f"You liked {username}'s profile!")
+    return HttpResponseRedirect(reverse("profile", kwargs={ "username": username }))
+
+@login_required(redirect_field_name="/")
+def dislike_profile(request, username):
+    user = User.objects.get(username=username) or None
+    profile = User.objects.get(pk=request.user.pk) or None
+    like = ProfileLike.objects.get(user=user, profile=profile)
+    like.delete()
+    messages.success(request, f"You disliked {username}'s profile!")
+    return HttpResponseRedirect(reverse("profile", kwargs={ "username": username }))
+
+@login_required(redirect_field_name="/")
+def follow_profile(request, username):
+    user = User.objects.get(username=username) or None
+    profile = User.objects.get(pk=request.user.pk) or None
+    follower = ProfileFollower.objects.create(user=user, profile=profile)
+    messages.success(request, f"You followed {username}!")
+    return HttpResponseRedirect(reverse("profile", kwargs={ "username": username }))
+
+@login_required(redirect_field_name="/")
+def unfollow_profile(request, username):
+    user = User.objects.get(username=username) or None
+    profile = User.objects.get(pk=request.user.pk) or None
+    follower = ProfileFollower.objects.get(user=user, profile=profile)
+    follower.delete()
+    messages.success(request, f"You unfollowed {username}!")
+    return HttpResponseRedirect(reverse("profile", kwargs={ "username": username }))
+
+@login_required(redirect_field_name="/")
+def profile_edit(request, username):
+    user = User.objects.get(pk=request.user.pk) or None
+
+    context = {
+        "user": user,
+        "join_date": user.date_joined.date(),
+    }
+
+    return render(request, "app/profile_edit.html", context)
+
+@login_required(redirect_field_name="/")
+def profile_edit_submit(request, username):
+    if request.method == "POST":
+        user = User.objects.get(pk=request.user.pk) or None
+
+        # Profile Credentials
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+
+        if "img" in request.FILES:
+            profile_picture = request.FILES["img"]
+        else:
+            profile_picture = user.profile_picture
+
+        # Password Credentials
+        current_password = request.POST.get("current_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        # Address Credentials
+        city = request.POST.get("city")
+        state = request.POST.get("state")
+        country = request.POST.get("country")
+
+        # Social Platforms Credentials
+        facebook = request.POST.get("facebook")
+        instagram = request.POST.get("instagram")
+        twitter = request.POST.get("twitter")
+
+        # Job & Numbers Credentials
+        job = request.POST.get("job")
+        phone_number = request.POST.get("phone_number")
+
+        user.username = username
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        
+        user.profile_picture = profile_picture
+
+        context = {
+            "user": user,
+        }
+
+        if current_password:
+            if new_password:
+                if confirm_password:
+                    if user.check_password(current_password):
+                        if new_password == confirm_password:
+                            user.set_password(new_password)
+                            user.save()
+                            messages.success(request, "Password updated successfully!")
+                            return HttpResponseRedirect(reverse("profile", kwargs=context))
+                        else:
+                            messages.error(request, "Passwords should match!")
+                            return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
+                    else:
+                        messages.error(request, "That's not your current password!")
+                        return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
+                else:
+                    messages.error(request, "'Confirm Password' field can not be empty!")
+                    return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
+            else:   
+                messages.error(request, "'New Password' field can not be empty!")
+                return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
+        else:
+            pass
+
+        
+        user.city = city
+        user.state = state
+        user.country = country
+
+        user.facebook = facebook
+        user.instagram = instagram
+        user.twitter = twitter
+        
+        user.job = job
+        user.phone_number = phone_number
+
+        user.save()
+
+        messages.success(request, "Changes saved successfully!")
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        messages.error(request, "An error occured!")
+        return HttpResponseRedirect(reverse("index"))
+
+@login_required(redirect_field_name="/")
+def profile_delete(request, username):
+    return render(request, "app/profile_delete.html")
+
+@login_required(redirect_field_name="/")
+def profile_delete_submit(request, username):
+    if request.method == "POST":
+        user = User.objects.get(pk=request.user.pk) or None
+
+        password = request.POST.get("password")
+
+        context = {
+            "user": user,
+        }
+
+        if user.check_password(password):
+            user.delete()
+            messages.success(request, "Profile deleted successfully!")
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            messages.error(request, "Wrong password!")
+            return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
+    else:
+        messages.error(request, "An error occured!")
+        return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
