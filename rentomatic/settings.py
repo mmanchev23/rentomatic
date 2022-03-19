@@ -9,7 +9,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'car.User'
+AUTH_USER_MODEL = 'app.User'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'car',
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -32,7 +32,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'rent.urls'
+ROOT_URLCONF = 'rentomatic.urls'
 
 TEMPLATES = [
     {
@@ -50,7 +50,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'rent.wsgi.application'
+WSGI_APPLICATION = 'rentomatic.wsgi.application'
 
 DATABASES = {
     'default': {
