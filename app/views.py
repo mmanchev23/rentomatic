@@ -143,3 +143,13 @@ def logout_view(request):
     logout(request)
     messages.success(request, "You have logged out successfully!")
     return HttpResponseRedirect(reverse("index"))
+
+@login_required(redirect_field_name="/")
+def profile(request, username):
+    user = User.objects.get(username=username) or None
+
+    context = {
+        "user": user,
+    }
+
+    return render(request, "app/profile.html", context)

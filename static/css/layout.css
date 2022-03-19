@@ -1,0 +1,5 @@
+body {
+    background: url("../images/homepage.jpg") fixed;
+    background-repeat: no-repeat;
+    background-size: cover;  
+}
