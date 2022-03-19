@@ -138,6 +138,8 @@ def login_view(request):
         messages.error(request, "Invalid username and/or password!")
         return render(request, "car/index.html")
 
+@login_required(redirect_field_name="/")
 def logout_view(request):
     logout(request)
+    messages.success(request, "You have logged out successfully!")
     return HttpResponseRedirect(reverse("index"))

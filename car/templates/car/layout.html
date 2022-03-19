@@ -7,7 +7,12 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %} Rent a car {% endblock %}</title>
+
+        <!-- Favicon.ico -->
         <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+
+        <!-- JQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
 
         <!-- Font Awesomey -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -21,11 +26,41 @@
     <body>
         {% include "car/navbar.html" %}
 
+        {% if messages %} 
+            {% for message in messages %}
+                <div aria-live="polite" aria-atomic="true">
+                    <div class="toast-container position-absolute top-1 end-0">
+                        {% if message.tags == 'success'%}
+                            <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" id="notification">
+                                <div class="d-flex">
+                                    <div class="toast-body">
+                                        {{ message }}
+                                    </div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        {% elif message.tags == 'error' %}
+                            <div class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="d-flex">
+                                    <div class="toast-body">
+                                        {{ message }}
+                                    </div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
         {% block body %}
         {% endblock %}
 
         {% include "car/register.html" %}
         {% include "car/login.html" %}
         {% include "car/logout.html" %}
+
+        <script src="{% static 'js/notification.js' %}"></script>
     </body>
 </html>
