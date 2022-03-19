@@ -280,7 +280,7 @@ def profile_edit_submit(request, username):
                 else:
                     messages.error(request, "'Confirm Password' field can not be empty!")
                     return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
-            else:   
+            else:
                 messages.error(request, "'New Password' field can not be empty!")
                 return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
         else:
