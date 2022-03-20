@@ -2,58 +2,55 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'index' %}">Rentomatic <i class="fa fa-car" aria-hidden="true"></i></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        {% if request.user.is_authenticated %}
-        <ul class="navbar-nav">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa fa-key" aria-hidden="true"></i> Features
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item text-center" href="{% url 'cars' %}"><i class="fa fa-car"></i> Rent a car</a></li>
-            </ul>
-          </li>
-        </ul>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa fa-cogs" aria-hidden="true"></i> Settings
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <a class="dropdown-item text-center" href="{% url 'profile' username=request.user.username %}"><i class="fa fa-address-card" aria-hidden="true"></i>
-                  {% if request.user.first_name and request.user.last_name %}
-                    {{ request.user.first_name }} {{ request.user.last_name }}
-                  {% else %}
-                    Profile
-                  {% endif %}
-                </a>
-              </li>
-              {% if request.user.is_superuser %}
-                <li><a class="dropdown-item text-center" href="{% url 'admin:index' %}"><i class="fa fa-cog"></i> Admin Panel</a></li>
-              {% endif %}
-              <li><a class="dropdown-item text-center" href="" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fa fa-sign-out"></i> Log out</a></li>
-            </ul>
-          </li>
-        </ul>
+      <div class="mx-auto order-0">
+        <a class="navbar-brand" id="logo" href="{% url 'index' %}">Rentomatic</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        {% if user.is_authenticated %}
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-car"></i> Features
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item text-center" href="{% url 'cars' %}"><i class="fa fa-car"></i> Rent a car</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="{{ request.user.image_url }}" width="25" class="rounded-circle" alt="Image not found..." id="profile-picture">
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                <li>
+                  <a class="dropdown-item text-center" href="{% url 'profile' username=request.user.username %}"><i class="fa fa-address-card" aria-hidden="true"></i>
+                    {% if user.first_name and user.last_name %}
+                      {{ user.first_name }} {{ user.last_name }}
+                    {% else %}
+                      Profile
+                    {% endif %}
+                  </a>
+                </li>
+                {% if request.user.is_superuser %}
+                  <li><a class="dropdown-item text-center" href="{% url 'admin:index' %}"><i class="fa fa-cog"></i> Admin Panel</a></li>
+                {% endif %}
+                <li><a class="dropdown-item text-center" href="/api/"><i class="fa fa-file-code-o" aria-hidden="true"></i> API</a></li>
+                <li><a class="dropdown-item text-center" href="" data-toggle="modal" data-target="#logoutModal"><i class="fa fa-sign-out"></i> Sign out</a></li>
+              </ul>
+            </li>
+          </ul>
         {% else %}
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="" data-bs-toggle="modal" data-bs-target="#registerModal"><i class="fa fa-user-plus"></i> Register</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fa fa-sign-in"></i> Log in</a>
-          </li>
-        </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link text-center" href="{% url 'sign_up' %}"><i class="fa fa-user-plus"></i> Sign Up</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-center" href="{% url 'sign_in' %}"><i class="fa fa-sign-in"></i> Sign in</a>
+            </li>
+          </ul>
         {% endif %}
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
       </div>
     </div>
 </nav>

@@ -7,16 +7,7 @@ SECRET_KEY = 'django-insecure-i-c&ze0nfgttb_r*pa7%2x3zvey%&)w=l-=9fro6e!$r*p9_6-
 
 DEBUG = True
 
-if DEBUG is False:
-    ALLOWED_HOSTS = [
-        '127.0.0.1:8000',
-        '*',
-    ]
-
-if DEBUG is True:
-    ALLOWED_HOSTS = []
-
-# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'app.User'
 
@@ -29,7 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'app',
-    'api',
+    #'api',
 ]
 
 MIDDLEWARE = [

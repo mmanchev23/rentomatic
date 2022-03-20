@@ -13,138 +13,150 @@ from django.contrib.auth import authenticate, login, logout
 def index(request):
     return render(request, "app/index.html")
 
-def register_view(request):
-    first_name = request.POST["first_name"]
-    last_name = request.POST["last_name"]
-    username = request.POST["username"]
-    email = request.POST["email"]
-    pin = request.POST["pin"]
-    phone_number = request.POST["phone_number"]
-    password = request.POST["password"]
-    confirm_password = request.POST["confirm_password"]
+def sign_up(request):
+    return render(request, "app/sign_up.html")
 
-    # First name validation
-    if not first_name:
-        messages.error(request, "The 'First name' field can not be empty!")
-        return render(request, "app/index.html")
+def sign_up_submit(request):
+    if request.method == "POST":
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        username = request.POST["username"]
+        email = request.POST["email"]
+        pin = request.POST["pin"]
+        phone_number = request.POST["phone_number"]
+        password = request.POST["password"]
+        confirm_password = request.POST["confirm_password"]
 
-    # Last name validation
-    if not last_name:
-        messages.error(request, "The 'Last name' field can not be empty!")
-        return render(request, "app/index.html")
+        if not first_name:
+            messages.error(request, "The 'First name' field can not be empty!")
+            return render(request, "app/sign_up.html")
 
-    # Username validation
-    if not username:
-        messages.error(request, "The 'Username' field can not be empty!")
-        return render(request, "app/index.html")
+        # Last name validation
+        if not last_name:
+            messages.error(request, "The 'Last name' field can not be empty!")
+            return render(request, "app/sign_up.html")
 
-    # Email validation
-    if not email:
-        messages.error(request, "The 'Email' field can not be empty!")
-        return render(request, "app/index.html")
+        # Username validation
+        if not username:
+            messages.error(request, "The 'Username' field can not be empty!")
+            return render(request, "app/sign_up.html")
 
-    # PIN validation
-    if not pin:
-        messages.error(request, "The 'PIN' field can not be empty!")
-        return render(request, "app/index.html")
+        # Email validation
+        if not email:
+            messages.error(request, "The 'Email' field can not be empty!")
+            return render(request, "app/sign_up.html")
 
-    if len(pin) != 10:
-        messages.error(request, "Your PIN should contain exactly 10 digits!")
-        return render(request, "app/index.html")
+        # PIN validation
+        if not pin:
+            messages.error(request, "The 'PIN' field can not be empty!")
+            return render(request, "app/sign_up.html")
 
-    # Phone number validation
-    if not phone_number:
-        messages.error(request, "The 'Phone number' field can not be empty!")
-        return render(request, "app/index.html")
+        if len(pin) != 10:
+            messages.error(request, "Your PIN should contain exactly 10 digits!")
+            return render(request, "app/sign_up.html")
 
-    if len(phone_number) != 10:
-        messages.error(request, "Your phone number should contain exactly 10 digits!")
-        return render(request, "app/index.html")
+        # Phone number validation
+        if not phone_number:
+            messages.error(request, "The 'Phone number' field can not be empty!")
+            return render(request, "app/sign_up.html")
 
-    # Password validation
-    if not password:
-        messages.error(request, "The 'Password' field can not be empty!")
-        return render(request, "app/index.html")
+        if len(phone_number) != 10:
+            messages.error(request, "Your phone number should contain exactly 10 digits!")
+            return render(request, "app/sign_up.html")
 
-    if not confirm_password:
-        messages.error(request, "The 'Confirm password' field can not be empty!")
-        return render(request, "app/index.html")
+        # Password validation
+        if not password:
+            messages.error(request, "The 'Password' field can not be empty!")
+            return render(request, "app/sign_up.html")
 
-    has_atleast_eight_characters = False
-    has_atleast_one_digit = any(map(str.isdigit, password))
-    has_atleast_one_upper = any(map(str.isupper, password))
-    has_atleast_one_lower = any(map(str.islower, password))
-    has_no_forbidden = False
+        if not confirm_password:
+            messages.error(request, "The 'Confirm password' field can not be empty!")
+            return render(request, "app/sign_up.html")
 
-    if len(str(password)) >= 8:
-        has_atleast_eight_characters = True
+        has_atleast_eight_characters = False
+        has_atleast_one_digit = any(map(str.isdigit, password))
+        has_atleast_one_upper = any(map(str.isupper, password))
+        has_atleast_one_lower = any(map(str.islower, password))
+        has_no_forbidden = False
 
-    if not str(password).__contains__('!') or not str(password).__contains__('$') or not str(password).__contains__('#') or not str(password).__contains__('%'):
-        has_no_forbidden = True
+        if len(str(password)) >= 8:
+            has_atleast_eight_characters = True
 
-    if password != confirm_password:
-        messages.error(request, "Passwords must match!")
-        return render(request, "app/index.html")
+        if not str(password).__contains__('!') or not str(password).__contains__('$') or not str(password).__contains__('#') or not str(password).__contains__('%'):
+            has_no_forbidden = True
 
-    if not has_atleast_eight_characters:
-        messages.error(request, "The password can not contain less than 8 characters!")
-        return render(request, "app/index.html", )
+        if password != confirm_password:
+            messages.error(request, "Passwords must match!")
+            return render(request, "app/sign_up.html")
 
-    if not has_atleast_one_digit:
-        messages.error(request, "The password should contains atleast one digit!")
-        return render(request, "app/index.html")
+        if not has_atleast_eight_characters:
+            messages.error(request, "The password can not contain less than 8 characters!")
+            return render(request, "app/sign_up.html", )
 
-    if not has_atleast_one_upper:
-        messages.error(request, "The password should contains atleast one upper character!")
-        return render(request, "app/index.html")
+        if not has_atleast_one_digit:
+            messages.error(request, "The password should contains atleast one digit!")
+            return render(request, "app/sign_up.html")
 
-    if not has_atleast_one_lower:
-        messages.error(request, "The password should contains atleast one lower character!")
-        return render(request, "app/index.html")
+        if not has_atleast_one_upper:
+            messages.error(request, "The password should contains atleast one upper character!")
+            return render(request, "app/sign_up.html")
 
-    if not has_no_forbidden:
-        messages.error(request, "The password should not contains '!', '$', '#' or '%'!")
-        return render(request, "app/index.html")
+        if not has_atleast_one_lower:
+            messages.error(request, "The password should contains atleast one lower character!")
+            return render(request, "app/sign_up.html")
 
-    try:
-        user = User.objects.create_user(
-            first_name=first_name,
-            last_name=last_name,
-            username=username,
-            email=email,
-            pin=pin,
-            phone_number=phone_number,
-            password=password
-        )
-        
-        user.save()
-        login(request, user)
-        messages.success(request, "You have registered successfully!")
-        return HttpResponseRedirect(reverse("index"))
-    except IntegrityError:
-        messages.error(request, "Username already taken!")
-        return render(request, "app/index.html")
+        if not has_no_forbidden:
+            messages.error(request, "The password should not contains '!', '$', '#' or '%'!")
+            return render(request, "app/sign_up.html")
 
-def login_view(request):
-    username = request.POST["username"]
-    password = request.POST["password"]
-    user = authenticate(username=username, password=password)
-
-    if user is not None:
-        login(request, user)
-        messages.success(request, "You have logged in successfully!")
-        return HttpResponseRedirect(reverse("index"))
+        try:
+            user = User.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
+                pin=pin,
+                phone_number=phone_number,
+                password=password
+            )
+            
+            user.save()
+            login(request, user)
+            messages.success(request, "You have registered successfully!")
+            return HttpResponseRedirect(reverse("index"))
+        except IntegrityError:
+            messages.error(request, "Username already taken!")
+            return render(request, "app/sign_up.html")
     else:
-        messages.error(request, "Invalid username and/or password!")
-        return render(request, "app/index.html")
+        return render(request, "app/sign_up.html")
 
-@login_required(redirect_field_name="/")
+def sign_in(request):
+    return render(request, "app/sign_in.html")
+
+def sign_in_submit(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        
+        try:
+            user = authenticate(username=username, password=password)
+            login(request, user)
+
+            messages.success(request, "You have signed in successfully!")
+            return HttpResponseRedirect(reverse("index"))
+        except:
+            messages.error(request, "Invalid username and/or password.")
+            return render(request, "app/sign_in.html")
+    else:
+        return render(request, "app/sign_in.html")
+
+@login_required(redirect_field_name="sign_in/")
 def logout_view(request):
     logout(request)
     messages.success(request, "You have logged out successfully!")
     return HttpResponseRedirect(reverse("index"))
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def profile(request, username):
     user = User.objects.get(username=username) or None
     profile = User.objects.get(pk=request.user.pk) or None
@@ -171,7 +183,7 @@ def profile(request, username):
 
     return render(request, "app/profile.html", context)
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def like_profile(request, username):
     user = User.objects.get(username=username) or None
     profile = User.objects.get(pk=request.user.pk) or None
@@ -179,7 +191,7 @@ def like_profile(request, username):
     messages.success(request, f"You liked {username}'s profile!")
     return HttpResponseRedirect(reverse("profile", kwargs={ "username": username }))
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def dislike_profile(request, username):
     user = User.objects.get(username=username) or None
     profile = User.objects.get(pk=request.user.pk) or None
@@ -188,7 +200,7 @@ def dislike_profile(request, username):
     messages.success(request, f"You disliked {username}'s profile!")
     return HttpResponseRedirect(reverse("profile", kwargs={ "username": username }))
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def follow_profile(request, username):
     user = User.objects.get(username=username) or None
     profile = User.objects.get(pk=request.user.pk) or None
@@ -196,7 +208,7 @@ def follow_profile(request, username):
     messages.success(request, f"You followed {username}!")
     return HttpResponseRedirect(reverse("profile", kwargs={ "username": username }))
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def unfollow_profile(request, username):
     user = User.objects.get(username=username) or None
     profile = User.objects.get(pk=request.user.pk) or None
@@ -205,7 +217,7 @@ def unfollow_profile(request, username):
     messages.success(request, f"You unfollowed {username}!")
     return HttpResponseRedirect(reverse("profile", kwargs={ "username": username }))
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def profile_edit(request, username):
     user = User.objects.get(pk=request.user.pk) or None
 
@@ -216,7 +228,7 @@ def profile_edit(request, username):
 
     return render(request, "app/profile_edit.html", context)
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def profile_edit_submit(request, username):
     if request.method == "POST":
         user = User.objects.get(pk=request.user.pk) or None
@@ -306,11 +318,11 @@ def profile_edit_submit(request, username):
         messages.error(request, "An error occured!")
         return HttpResponseRedirect(reverse("index"))
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def profile_delete(request, username):
     return render(request, "app/profile_delete.html")
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def profile_delete_submit(request, username):
     if request.method == "POST":
         user = User.objects.get(pk=request.user.pk) or None
@@ -332,7 +344,7 @@ def profile_delete_submit(request, username):
         messages.error(request, "An error occured!")
         return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def cars(request):
     cars = Car.objects.all() or None
 
@@ -342,7 +354,7 @@ def cars(request):
 
     return render(request, "app/cars.html", context)
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def car_apply(request, id):
     if request.method == "POST":
         user = User.objects.get(pk=request.user.pk) or None
@@ -356,7 +368,7 @@ def car_apply(request, id):
     else:
         return render(request, "app/cars.html")
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def car_create(request):
     if request.method == "POST":
         brand = request.POST.get("brand")
@@ -379,7 +391,7 @@ def car_create(request):
     else:
         return render(request, "app/cars.html")
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def car_edit(request, id):
     if request.method == "POST":
         car = Car.objects.get(pk=id) or None
@@ -403,7 +415,7 @@ def car_edit(request, id):
     else:
         return render(request, "app/cars.html")
 
-@login_required(redirect_field_name="/")
+@login_required(redirect_field_name="sign_in/")
 def car_delete(request, id):
     if request.method == "POST":
         car = Car.objects.get(pk=id) or None

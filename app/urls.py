@@ -13,9 +13,13 @@ urlpatterns = [
     # Admin Route
     path("admin/", admin.site.urls, name="admin"),
 
-    # Authentication Routes
-    path("register/", register_view, name="register"),
-    path("login/", login_view, name="login"),
+    # Register Routes
+    path("sign-up/", sign_up, name="sign_up"),
+    path("sign-up/submit/", sign_up_submit, name="sign_up_submit"),
+
+    # Log In Routes
+    path("sign-in/", sign_in, name="sign_in"),
+    path("sign-in/submit/", sign_in_submit, name="sign_in_submit"),
     path("logout/", logout_view, name="logout"),
 
     # Profile Routes
