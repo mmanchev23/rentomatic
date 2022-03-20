@@ -9,56 +9,66 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
+                                <br>
+                                <br>
                                 <h4 class="mb-0">Rent a car</h4>
+                                <a class="btn btn-primary" href="" data-toggle="modal" data-target="#createcar">
+                                    <i class="fa fa-car" aria-hidden="true"></i> Add a car
+                                </a>
+
+                                <div class="modal fade text-left" id="createcar">
+                                    <form action="{% url 'car_create' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h2>Add a car</h2>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="brand" class="form-label">Brand</label>
+                                                        <input class="form-control" type="text" name="brand" placeholder="Enter brand" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="model" class="form-label">Model</label>
+                                                        <input class="form-control" type="text" name="model" placeholder="Enter model" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="year" class="form-label">Year</label>
+                                                        <input class="form-control" type="date" name="year" placeholder="Enter year" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="seats" class="form-label">Seats</label>
+                                                        <input class="form-control" type="number" name="seats" placeholder="Enter amount of seats" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="price" class="form-label">Price</label>
+                                                        <input class="form-control" type="number" name="price" placeholder="Enter price" step=".01" required>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-success" type="submit">
+                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                                                    </button>
+                                                    <button class="btn btn-primary" type="submit" data-dismiss="modal" value="Close">
+                                                        <i class="fa fa-cross" aria-hidden="true"></i> Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
 
                             {% if request.user.is_staff %}
                                 <div class="col">
-                                    <a class="btn btn-primary" href="" data-toggle="modal" data-target="#createcar">
-                                        <i class="fa fa-car" aria-hidden="true"></i> Add a car
-                                    </a>
-
-                                    <div class="modal fade text-left" id="createcar">
-                                        <form action="{% url 'car_create' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h2>Add a car</h2>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="brand" class="form-label">Brand</label>
-                                                            <input class="form-control" type="text" name="brand" placeholder="Enter brand" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="model" class="form-label">Model</label>
-                                                            <input class="form-control" type="text" name="model" placeholder="Enter model" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="year" class="form-label">Year</label>
-                                                            <input class="form-control" type="date" name="year" placeholder="Enter year" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="seats" class="form-label">Seats</label>
-                                                            <input class="form-control" type="number" name="seats" placeholder="Enter amount of seats" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="price" class="form-label">Price</label>
-                                                            <input class="form-control" type="number" name="price" placeholder="Enter price" step=".01" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-success" type="submit">
-                                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
-                                                        </button>
-                                                        <button class="btn btn-primary" type="submit" data-dismiss="modal" value="Close">
-                                                            <i class="fa fa-cross" aria-hidden="true"></i> Close
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
+                                    <div class="form-group">
+                                        <label for="start_date">Start date:</label>
+                                        <input class="form-control" type="date" name="start_date" placeholder="Enter year" required>
+                                    </div> 
+                                    <div class="form-group">
+                                        <label for="end_date">End date:</label>
+                                        <input class="form-control" type="date" name="end_date" placeholder="Enter year" required>
                                     </div>
                                 </div>
                             {% endif %}
