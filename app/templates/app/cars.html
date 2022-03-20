@@ -1,0 +1,248 @@
+{% extends "app/layout.html" %}
+
+{% block body %}
+<div class="container mt-3">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <div class="col text-center">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h4 class="mb-0">Rent a car</h4>
+                            </div>
+
+                            {% if request.user.is_staff %}
+                                <div class="col">
+                                    <a class="btn btn-primary" href="" data-toggle="modal" data-target="#createcar">
+                                        <i class="fa fa-car" aria-hidden="true"></i> Add a car
+                                    </a>
+
+                                    <div class="modal fade text-left" id="createcar">
+                                        <form action="{% url 'car_create' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h2>Add a car</h2>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label for="brand" class="form-label">Brand</label>
+                                                            <input class="form-control" type="text" name="brand" placeholder="Enter brand" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="model" class="form-label">Model</label>
+                                                            <input class="form-control" type="text" name="model" placeholder="Enter model" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="year" class="form-label">Year</label>
+                                                            <input class="form-control" type="date" name="year" placeholder="Enter year" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="seats" class="form-label">Seats</label>
+                                                            <input class="form-control" type="number" name="seats" placeholder="Enter amount of seats" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="price" class="form-label">Price</label>
+                                                            <input class="form-control" type="number" name="price" placeholder="Enter price" step=".01" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-success" type="submit">
+                                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                                                        </button>
+                                                        <button class="btn btn-primary" type="submit" data-dismiss="modal" value="Close">
+                                                            <i class="fa fa-cross" aria-hidden="true"></i> Close
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <hr>
+                        {% for car in cars %}
+                            <div class="row p-2 car-items">
+                                <div class="col-sm-3 car">
+                                    <div class="row">
+                                        <h6 class="mb-0">
+                                            <u>{{ car.brand }} {{ car.model }}</u>
+                                        </h6>
+                                    </div>
+                                    
+                                    <div class="row car-buttons">
+                                        <div class="col car-apply-btn">
+                                            <a class="car-apply-a" href="" data-toggle="modal" data-target="#applyModal{{ car.id }}">
+                                                <i class="fa fa-plus text-success btn" data-toggle="tooltip" data-placement="bottom" title="Apply for the car"></i>
+                                            </a>
+
+                                            <div class="modal fade text-left" id="applyModal{{ car.id }}">
+                                                <form action="{% url 'car_apply' id=car.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h2>Apply for {{ car.brand }} {{ car.model }}</h2>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="name" class="form-label">Start date</label>
+                                                                    <input class="form-control" type="date" name="start_date" placeholder="Enter start date" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="name" class="form-label">End date</label>
+                                                                    <input class="form-control" type="date" name="end_date" placeholder="Enter end date" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-success" type="submit">
+                                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                                                                </button>
+                                                                <button class="btn btn-danger" type="submit" data-dismiss="modal" value="Close">
+                                                                    <i class="fa fa-times" aria-hidden="true"></i> Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        {% if request.user.is_staff %}
+                                        <div class="col car-edit-btn">
+                                            <a class="car-edit-a" href="" data-toggle="modal" data-target="#editcarModal{{ car.id }}">
+                                                <i class="fa fa-pencil text-info btn" data-toggle="tooltip" data-placement="bottom" title="Edit car"></i>
+                                            </a>
+
+                                            <div class="modal fade text-left" id="editcarModal{{ car.id }}">
+                                                <form action="{% url 'car_edit' id=car.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h2>{{ car.brand }} {{ car.model }}</h2>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="brand" class="form-label">Brand</label>
+                                                                    <input class="form-control" type="text" name="brand" placeholder="Enter brand" value="{{ car.brand }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="model" class="form-label">Model</label>
+                                                                    <input class="form-control" type="text" name="model" placeholder="Enter model" value="{{ car.model }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="year" class="form-label">Year</label>
+                                                                    <input class="form-control" type="date" name="year" placeholder="Enter year" value="{{ car.year }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="seats" class="form-label">Seats</label>
+                                                                    <input class="form-control" type="number" name="seats" placeholder="Enter amount of seats" value="{{ car.seats }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="price" class="form-label">Price</label>
+                                                                    <input class="form-control" type="number" name="price" placeholder="Enter price"value="{{ car.price }}" step=".01" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-success" type="submit">
+                                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                                                                </button>
+                                                                <button class="btn btn-primary" type="submit" data-dismiss="modal" value="Close">
+                                                                    <i class="fa fa-cross" aria-hidden="true"></i> Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <div class="col car-delete-btn">
+                                            <a class="car-delete-a" href="" data-toggle="modal" data-target="#deletecarModal{{ car.id }}">
+                                                <i class="fa fa-trash-o text-danger btn" data-toggle="tooltip" data-placement="bottom" title="Delete car"></i>
+                                            </a>
+            
+                                            <div class="modal fade" id="deletecarModal{{ car.id }}">
+                                                <form action="{% url 'car_delete' id=car.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h2>Delete "{{ car.brand }} {{ car.model }}"?</h2>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-danger" type="submit">
+                                                                    Delete
+                                                                </button>
+                                                                <button class="btn btn-primary" type="submit" data-dismiss="modal" value="Close">
+                                                                    Go back
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-9 text-secondary">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="row">
+                                                <h6>Brand</h6>
+                                            </div>
+                                            <div class="row">
+                                                <h6>{{ car.brand }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <h6>Model</h6>
+                                            </div>
+                                            <div class="row">
+                                                <h6>{{ car.model }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <h6>Year</h6>
+                                            </div>
+                                            <div class="row">
+                                                <h6>{{ car.year }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <h6>Seats</h6>
+                                            </div>
+                                            <div class="row">
+                                                <h6>{{ car.seats }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <h6>Price</h6>
+                                            </div>
+                                            <div class="row">
+                                                <h6>{{ car.price }} $</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <h4 class="text-center">No cars yet...</h4>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

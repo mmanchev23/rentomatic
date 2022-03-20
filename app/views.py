@@ -1,4 +1,4 @@
-import os
+from pyexpat import model
 from .models import *
 from django.db.models import Q
 from django.urls import reverse
@@ -331,3 +331,84 @@ def profile_delete_submit(request, username):
     else:
         messages.error(request, "An error occured!")
         return HttpResponseRedirect(reverse("profile_edit", kwargs=context))
+
+@login_required(redirect_field_name="/")
+def cars(request):
+    cars = Car.objects.all() or None
+
+    context = {
+        "cars": cars,
+    }
+
+    return render(request, "app/cars.html", context)
+
+@login_required(redirect_field_name="/")
+def car_apply(request, id):
+    if request.method == "POST":
+        user = User.objects.get(pk=request.user.pk) or None
+        car = Car.objects.get(pk=id) or None
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+        application = Application.objects.create(user=user, car=car, start_date=start_date, end_date=end_date)
+        application.save()
+        messages.success(request, f"You have applied for {car.brand} {car.model} successfully!")
+        return HttpResponseRedirect(reverse("cars"))
+    else:
+        return render(request, "app/cars.html")
+
+@login_required(redirect_field_name="/")
+def car_create(request):
+    if request.method == "POST":
+        brand = request.POST.get("brand")
+        model = request.POST.get("model")
+        year = request.POST.get("year")
+        seats = request.POST.get("seats")
+        price = request.POST.get("price")
+
+        car = Car.objects.create(
+            brand=brand,
+            model=model,
+            year=year,
+            seats=seats,
+            price=price
+        )
+
+        car.save()
+        messages.success(request, f"{brand} {model} created successfully!")
+        return HttpResponseRedirect(reverse("cars"))
+    else:
+        return render(request, "app/cars.html")
+
+@login_required(redirect_field_name="/")
+def car_edit(request, id):
+    if request.method == "POST":
+        car = Car.objects.get(pk=id) or None
+        
+        brand = request.POST.get("brand")
+        model = request.POST.get("model")
+        year = request.POST.get("year")
+        seats = request.POST.get("seats")
+        price = request.POST.get("price")
+
+        car.brand = brand
+        car.model = model
+        car.year = year
+        car.seats = seats
+        car.price = price
+
+        car.save()
+
+        messages.success(request, f"{car.brand} {car.model} updated successfully!")
+        return HttpResponseRedirect(reverse("cars"))
+    else:
+        return render(request, "app/cars.html")
+
+@login_required(redirect_field_name="/")
+def car_delete(request, id):
+    if request.method == "POST":
+        car = Car.objects.get(pk=id) or None
+        car.delete()
+        messages.success(request, f"{car.brand} {car.model} deleted successfully!")
+        return HttpResponseRedirect(reverse("cars"))
+    else:
+        return render(request, "app/cars.html")

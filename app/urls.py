@@ -32,6 +32,14 @@ urlpatterns = [
     # Profile Delete Routes
     path("profile/<str:username>/delete/", profile_delete, name="profile_delete"),
     path("profile/<str:username>/delete/submit/", profile_delete_submit, name="profile_delete_submit"),
+
+    
+    # Cars routing
+    path("cars/", cars, name="cars"),
+    path("car/create/", car_create, name="car_create"),
+    path("car/<uuid:id>/apply/", car_apply, name="car_apply"),
+    path("car/<uuid:id>/edit/", car_edit, name="car_edit"),
+    path("car/<uuid:id>/delete/", car_delete, name="car_delete"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
