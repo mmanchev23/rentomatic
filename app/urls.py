@@ -37,7 +37,6 @@ urlpatterns = [
     path("profile/<str:username>/delete/", profile_delete, name="profile_delete"),
     path("profile/<str:username>/delete/submit/", profile_delete_submit, name="profile_delete_submit"),
 
-    
     # Cars routing
     path("cars/", cars, name="cars"),
     path("car/search/", car_search, name="car_search"),

@@ -20,15 +20,16 @@ def sign_up(request):
 
 def sign_up_submit(request):
     if request.method == "POST":
-        first_name = request.POST["first_name"]
-        last_name = request.POST["last_name"]
-        username = request.POST["username"]
-        email = request.POST["email"]
-        pin = request.POST["pin"]
-        phone_number = request.POST["phone_number"]
-        password = request.POST["password"]
-        confirm_password = request.POST["confirm_password"]
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        pin = request.POST.get("pin")
+        phone_number = request.POST.get("phone_number")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
 
+        # First name validation
         if not first_name:
             messages.error(request, "The 'First name' field can not be empty!")
             return render(request, "app/sign_up.html")
@@ -137,8 +138,8 @@ def sign_in(request):
 
 def sign_in_submit(request):
     if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
+        username = request.POST.get("username")
+        password = request.POST.get("password")
         
         try:
             user = authenticate(username=username, password=password)
@@ -349,26 +350,14 @@ def profile_delete_submit(request, username):
 @login_required(redirect_field_name="sign_in/")
 def cars(request):
     cars = Car.objects.all() or None
+    applications = Application.objects.all() or None
 
     context = {
         "cars": cars,
+        "applications": applications
     }
 
     return render(request, "app/cars.html", context)
-
-@login_required(redirect_field_name="sign_in/")
-def car_apply(request, id):
-    if request.method == "POST":
-        user = User.objects.get(pk=request.user.pk) or None
-        car = Car.objects.get(pk=id) or None
-        start_date = request.POST.get("start_date")
-        end_date = request.POST.get("end_date")
-        application = Application.objects.create(user=user, car=car, start_date=start_date, end_date=end_date)
-        application.save()
-        messages.success(request, f"You have applied for {car.brand} {car.model} successfully!")
-        return HttpResponseRedirect(reverse("cars"))
-    else:
-        return render(request, "app/cars.html")
 
 @login_required(redirect_field_name="sign_in/")
 def car_create(request):
@@ -423,6 +412,20 @@ def car_delete(request, id):
         car = Car.objects.get(pk=id) or None
         car.delete()
         messages.success(request, f"{car.brand} {car.model} deleted successfully!")
+        return HttpResponseRedirect(reverse("cars"))
+    else:
+        return render(request, "app/cars.html")
+
+@login_required(redirect_field_name="sign_in/")
+def car_apply(request, id):
+    if request.method == "POST":
+        user = User.objects.get(pk=request.user.pk) or None
+        car = Car.objects.get(pk=id) or None
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+        application = Application.objects.create(user=user, car=car, start_date=start_date, end_date=end_date)
+        application.save()
+        messages.success(request, f"You have applied for {car.brand} {car.model} successfully!")
         return HttpResponseRedirect(reverse("cars"))
     else:
         return render(request, "app/cars.html")

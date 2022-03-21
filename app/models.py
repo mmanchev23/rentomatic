@@ -47,6 +47,7 @@ class ProfileFollower(models.Model):
 
 class Car(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    picture = models.ImageField(default="default_picture.png")
     brand = models.CharField(max_length=100, null=False, blank=False)
     model = models.CharField(max_length=100, null=False, blank=False)
     year = models.DateField(null=False, blank=False)
@@ -56,6 +57,13 @@ class Car(models.Model):
 
     def __str__(self) -> str:
         return f"{self.brand} {self.model} {self.year}"
+
+    @property
+    def image_url(self) -> str:
+        if self.picture and hasattr(self.picture, "url"):
+            return self.picture.url
+        else:
+            return ""
 
 class Application(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -40,6 +40,10 @@
                                                         <label for="price" class="form-label">Price</label>
                                                         <input class="form-control" type="number" name="price" placeholder="Enter price" step=".01" required>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label for="description" class="form-label">Description</label>
+                                                        <textarea class="form-control" name="description" placeholder="Enter description" required></textarea>
+                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="btn btn-success" type="submit">
@@ -90,7 +94,43 @@
                                 <div class="col-sm-3 car">
                                     <div class="row">
                                         <h6 class="mb-0">
-                                            <u>{{ car.brand }} {{ car.model }}</u>
+                                            <a class="car-a" href="" data-toggle="modal" data-target="#carModal{{ car.id }}">
+                                                {{ car.brand }} {{ car.model }}
+                                            </a>
+
+                                            <div class="modal fade text-left" id="carModal{{ car.id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h2>{{ car.brand }} {{ car.model }}</h2>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <img src="{{ car.image_url }}" alt="Image">
+                                                            </div>
+                                                            <div class="row">
+                                                                <h3>{{ car.description }}</h3>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a class="btn btn-success" href="" type="button" data-toggle="modal" data-target="#applyModal{{ car.id }}">
+                                                                <i class="fa fa-plus" data-toggle="tooltip" data-placement="bottom" title="Apply for the car"></i> Apply
+                                                            </a>
+                                                            {% if request.user.is_staff %}
+                                                                <a class="btn btn-primary" href="" data-toggle="modal" data-target="#editcarModal{{ car.id }}">
+                                                                    <i class="fa fa-pencil" data-toggle="tooltip" data-placement="bottom" title="Edit car"></i> Edit
+                                                                </a>
+                                                                <a class="btn btn-danger" href="" data-toggle="modal" data-target="#deletecarModal{{ car.id }}">
+                                                                    <i class="fa fa-trash-o" data-toggle="tooltip" data-placement="bottom" title="Delete car"></i> Delete
+                                                                </a>
+                                                            {% endif %}
+                                                            <button class="btn btn-danger" type="submit" data-dismiss="modal" value="Close">
+                                                                <i class="fa fa-times" aria-hidden="true"></i> Close
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </h6>
                                     </div>
                                     
