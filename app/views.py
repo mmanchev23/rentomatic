@@ -1,3 +1,5 @@
+from email.mime import application
+from multiprocessing import context
 from pyexpat import model
 from .models import *
 from django.db.models import Q
@@ -422,5 +424,27 @@ def car_delete(request, id):
         car.delete()
         messages.success(request, f"{car.brand} {car.model} deleted successfully!")
         return HttpResponseRedirect(reverse("cars"))
+    else:
+        return render(request, "app/cars.html")
+
+@login_required(redirect_field_name="sign_in/")
+def car_search(request):
+    if request.method == "POST":
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+        applications = Application.objects.filter(start_date__gte=start_date, end_date__lte=end_date) or None
+        cars = Car.objects.filter(id=applications.car.id) or None
+
+        if applications:
+            context = {
+                "applications": applications,
+                "cars": cars
+            }
+
+            messages.success(request, f"Found {applications.count} results!")
+            return render(request, "app/cars.html", context)
+        else:
+            messages.error(request, "No results were found!")
+            return render(request, "app/cars.html", context)
     else:
         return render(request, "app/cars.html")

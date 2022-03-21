@@ -9,12 +9,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <br>
-                                <br>
-                                <h4 class="mb-0">Rent a car</h4>
-                                <a class="btn btn-primary" href="" data-toggle="modal" data-target="#createcar">
-                                    <i class="fa fa-car" aria-hidden="true"></i> Add a car
-                                </a>
+                                <h2 class="mb-0">Rent a car</h2>
 
                                 <div class="modal fade text-left" id="createcar">
                                     <form action="{% url 'car_create' %}" method="POST">
@@ -50,8 +45,8 @@
                                                     <button class="btn btn-success" type="submit">
                                                         <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
                                                     </button>
-                                                    <button class="btn btn-primary" type="submit" data-dismiss="modal" value="Close">
-                                                        <i class="fa fa-cross" aria-hidden="true"></i> Close
+                                                    <button class="btn btn-danger" type="submit" data-dismiss="modal" value="Close">
+                                                        <i class="fa fa-times" aria-hidden="true"></i> Close
                                                     </button>
                                                 </div>
                                             </div>
@@ -59,20 +54,36 @@
                                     </form>
                                 </div>
                             </div>
-
-                            {% if request.user.is_staff %}
+                            <div class="col">
+                                <a class="btn btn-primary" href="" data-toggle="modal" data-target="#createcar">
+                                    <i class="fa fa-car" aria-hidden="true"></i> Add a car
+                                </a>
+                            </div>
+                        </div>
+                        <hr>
+                        <form action="{% url 'car_search' %}" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <h4>Sort by date:</h4>
+                                        <button class="btn btn-success" type="submit"><i class="fa fa-search" aria-hidden="true"></i> Search</button> 
+                                    </div>
+                                </div>
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="start_date">Start date:</label>
                                         <input class="form-control" type="date" name="start_date" placeholder="Enter year" required>
-                                    </div> 
+                                    </div>
+                                </div>
+                                <div class="col">
                                     <div class="form-group">
                                         <label for="end_date">End date:</label>
                                         <input class="form-control" type="date" name="end_date" placeholder="Enter year" required>
                                     </div>
                                 </div>
-                            {% endif %}
-                        </div>
+                            </div>
+                        </form>
                         <hr>
                         {% for car in cars %}
                             <div class="row p-2 car-items">

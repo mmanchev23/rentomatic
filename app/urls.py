@@ -40,6 +40,7 @@ urlpatterns = [
     
     # Cars routing
     path("cars/", cars, name="cars"),
+    path("car/search/", car_search, name="car_search"),
     path("car/create/", car_create, name="car_create"),
     path("car/<uuid:id>/apply/", car_apply, name="car_apply"),
     path("car/<uuid:id>/edit/", car_edit, name="car_edit"),
