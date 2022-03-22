@@ -367,13 +367,21 @@ def car_create(request):
         year = request.POST.get("year")
         seats = request.POST.get("seats")
         price = request.POST.get("price")
+        description = request.POST.get("description")
+
+        if "img" in request.FILES:
+            picture = request.FILES.get("img")
+        else:
+            picture = ''
 
         car = Car.objects.create(
             brand=brand,
             model=model,
             year=year,
             seats=seats,
-            price=price
+            price=price,
+            description=description,
+            picture=picture
         )
 
         car.save()
@@ -392,12 +400,20 @@ def car_edit(request, id):
         year = request.POST.get("year")
         seats = request.POST.get("seats")
         price = request.POST.get("price")
+        description = request.POST.get("description")
+
+        if "img" in request.FILES:
+            picture = request.FILES.get("img")
+        else:
+            picture = car.picture
 
         car.brand = brand
         car.model = model
         car.year = year
         car.seats = seats
         car.price = price
+        car.description = description
+        car.picture = picture
 
         car.save()
 

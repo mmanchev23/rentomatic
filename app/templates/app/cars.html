@@ -41,6 +41,10 @@
                                                         <input class="form-control" type="number" name="price" placeholder="Enter price" step=".01" required>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label for="image" class="form-label">Image</label>
+                                                        <input class="form-control" type="file" name="image" placeholder="Enter image"required>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <label for="description" class="form-label">Description</label>
                                                         <textarea class="form-control" name="description" placeholder="Enter description" required></textarea>
                                                     </div>
@@ -59,7 +63,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <a class="btn btn-primary" href="" data-toggle="modal" data-target="#createcar">
+                                <a class="btn btn-primary" href="" data-toggle="modal" data-target="#createcar" enctype="multipart/form-data">
                                     <i class="fa fa-car" aria-hidden="true"></i> Add a car
                                 </a>
                             </div>
@@ -89,6 +93,7 @@
                             </div>
                         </form>
                         <hr>
+                        <h2>Cars</h2>
                         {% for car in cars %}
                             <div class="row p-2 car-items">
                                 <div class="col-sm-3 car">
@@ -179,7 +184,7 @@
                                             </a>
 
                                             <div class="modal fade text-left" id="editcarModal{{ car.id }}">
-                                                <form action="{% url 'car_edit' id=car.id %}" method="POST">
+                                                <form action="{% url 'car_edit' id=car.id %}" method="POST" enctype="multipart/form-data">
                                                     {% csrf_token %}
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -205,7 +210,15 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="price" class="form-label">Price</label>
-                                                                    <input class="form-control" type="number" name="price" placeholder="Enter price"value="{{ car.price }}" step=".01" required>
+                                                                    <input class="form-control" type="number" name="price" placeholder="Enter price" value="{{ car.price }}" step=".01" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="image" class="form-label">Image</label>
+                                                                    <input class="form-control" type="file" name="image" placeholder="Enter image" value="{{ car.picture }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="description" class="form-label">Description</label>
+                                                                    <textarea class="form-control" name="description" placeholder="Enter description" required>{{ car.description }}</textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
@@ -297,6 +310,59 @@
                                     </div>
                                 </div>
                             </div>
+                        {% empty %}
+                            <h4 class="text-center">No cars yet...</h4>
+                        {% endfor %}
+                        <hr>
+                        <h2>Applications</h2>
+                        {% for application in applications %}
+
+                        <div class="row">
+                            <div class="col text-secondary">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row">
+                                            <h6>Car</h6>
+                                        </div>
+                                        <div class="row">
+                                            <h6>{{ application.car.brand }} {{ application.car.model }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <h6>User</h6>
+                                        </div>
+                                        <div class="row">
+                                            <h6>{{ application.user.first_name }} {{ application.user.last_name }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <h6>Start date:</h6>
+                                        </div>
+                                        <div class="row">
+                                            <h6>{{ application.start_date }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <h6>End date:</h6>
+                                        </div>
+                                        <div class="row">
+                                            <h6>{{ application.end_date }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <h6>Price</h6>
+                                        </div>
+                                        <div class="row">
+                                            <h6>{{ application.car.price }} $</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {% empty %}
                             <h4 class="text-center">No cars yet...</h4>
                         {% endfor %}
