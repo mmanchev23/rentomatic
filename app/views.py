@@ -368,11 +368,11 @@ def car_create(request):
         seats = request.POST.get("seats")
         price = request.POST.get("price")
         description = request.POST.get("description")
-
+        
         if "img" in request.FILES:
             picture = request.FILES.get("img")
         else:
-            picture = ''
+            picture = '../static/images/default_picture.png'
 
         car = Car.objects.create(
             brand=brand,
