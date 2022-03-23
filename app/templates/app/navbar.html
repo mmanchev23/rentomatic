@@ -19,6 +19,10 @@
             {% if request.user.is_superuser %}
               <li><a class="nav-link text-center" href="{% url 'admin:index' %}"><i class="fa fa-cog"></i> Admin Panel</a></li>
             {% endif %}
+
+            <li>
+              <a class="nav-link text-center" href="/api/"><i class="fa fa-file-code-o" aria-hidden="true"></i> API</a>
+            </li>
             <li>
               <a class="nav-link text-center" href="{% url 'profile' username=request.user.username %}"><i class="fa fa-address-card" aria-hidden="true"></i>
                 {% if user.first_name and user.last_name %}

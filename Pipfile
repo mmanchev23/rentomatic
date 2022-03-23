@@ -6,9 +6,12 @@ name = "pypi"
 [packages]
 django = "*"
 pillow = "*"
-python-dateutil = "*"
+dateutils = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
+dj-rest-auth = {extras = ["with_social"], version = "*"}
+coreapi = "*"
+pyyaml = "*"
 
 [dev-packages]
 
