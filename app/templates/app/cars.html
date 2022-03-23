@@ -313,6 +313,29 @@
                         {% empty %}
                             <h4 class="text-center">No cars yet...</h4>
                         {% endfor %}
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if cars.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ cars.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                <li class="page-item"><a class="page-link" href="">{{ cars.number }}</a></li>
+
+                                {% if cars.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ cars.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
                         <hr>
                         <h2>Applications</h2>
                         {% for application in applications %}
@@ -364,8 +387,32 @@
                             </div>
                         </div>
                         {% empty %}
-                            <h4 class="text-center">No cars yet...</h4>
+                            <h4 class="text-center">No applications yet...</h4>
                         {% endfor %}
+
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if applications.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ applications.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                <li class="page-item"><a class="page-link" href="">{{ applications.number }}</a></li>
+
+                                {% if applications.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ applications.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>

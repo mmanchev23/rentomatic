@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.urls import reverse
 from django.contrib import messages
 from django.db import IntegrityError
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -349,12 +350,27 @@ def profile_delete_submit(request, username):
 
 @login_required(redirect_field_name="sign_in/")
 def cars(request):
-    cars = Car.objects.all() or None
+    cars = Car.objects.all()
     applications = Application.objects.all() or None
 
+    cars_paginator = Paginator(cars, 5)
+    applications_paginator = Paginator(applications, 5)
+
+    page_number = request.GET.get("page")
+
+    try:
+        car_obj = cars_paginator.get_page(page_number)
+        application_obj = applications_paginator.get_page(page_number)
+    except PageNotAnInteger:
+        car_obj = cars_paginator.page(1)
+        application_obj = applications_paginator.page(1)
+    except EmptyPage:
+        car_obj = cars_paginator.page(cars_paginator.num_pages)
+        application_obj = applications_paginator.page(applications_paginator.num_pages)
+
     context = {
-        "cars": cars,
-        "applications": applications
+        "cars": car_obj,
+        "applications": application_obj,
     }
 
     return render(request, "app/cars.html", context)
