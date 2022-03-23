@@ -1,16 +1,14 @@
-from email.mime import application
-from multiprocessing import context
-from pyexpat import model
 from .models import *
 from django.db.models import Q
 from django.urls import reverse
+from dateutil.parser import parse
 from django.contrib import messages
 from django.db import IntegrityError
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def index(request):
@@ -351,7 +349,7 @@ def profile_delete_submit(request, username):
 @login_required(redirect_field_name="sign_in/")
 def cars(request):
     cars = Car.objects.all()
-    applications = Application.objects.all() or None
+    applications = Application.objects.all()
 
     cars_paginator = Paginator(cars, 5)
     applications_paginator = Paginator(applications, 5)
@@ -465,18 +463,20 @@ def car_apply(request, id):
 @login_required(redirect_field_name="sign_in/")
 def car_search(request):
     if request.method == "POST":
-        start_date = request.POST.get("start_date")
-        end_date = request.POST.get("end_date")
-        applications = Application.objects.filter(start_date__gte=start_date, end_date__lte=end_date) or None
-        cars = Car.objects.filter(id=applications.car.id) or None
+        start_date = request.POST.get("start_date", "")
+        end_date = request.POST.get("end_date", "")
 
-        if applications:
-            context = {
-                "applications": applications,
-                "cars": cars
-            }
+        mstart_date = parse(start_date)
+        mend_date= parse(end_date)
 
-            messages.success(request, f"Found {applications.count} results!")
+        applications = Application.objects.filter(start_date__gt=mstart_date, end_date__lt=mend_date)
+
+        context = {
+            "applications": applications,
+        }
+
+        if applications.count() > 0:
+            messages.success(request, f"Found {applications.count()} results!")
             return render(request, "app/cars.html", context)
         else:
             messages.error(request, "No results were found!")
