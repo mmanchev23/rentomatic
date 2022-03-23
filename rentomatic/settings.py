@@ -1,4 +1,5 @@
 import os
+import django_on_heroku
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -7,7 +8,7 @@ SECRET_KEY = 'django-insecure-i-c&ze0nfgttb_r*pa7%2x3zvey%&)w=l-=9fro6e!$r*p9_6-
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'rentomatic-django.herokuapp.com']
 
 AUTH_USER_MODEL = 'app.User'
 
@@ -40,6 +41,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'corsheaders.middleware.CorsMiddleware',
 
     'django.middleware.common.CommonMiddleware',
@@ -48,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'rentomatic.urls'
 
@@ -89,8 +94,6 @@ LOGIN_URL = 'sign_in'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_URL = 'sign_out'
 LOGOUT_REDIRECT_URL = 'sign_in'
-
-ROOT_URLCONF = 'rentomatic.urls'
 
 WSGI_APPLICATION = 'rentomatic.wsgi.application'
 
@@ -135,3 +138,13 @@ MEDIA_URL = '/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+django_on_heroku.settings(locals())
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
