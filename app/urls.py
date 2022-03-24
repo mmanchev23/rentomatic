@@ -40,11 +40,14 @@ urlpatterns = [
 
     # Cars routing
     path("cars/", cars, name="cars"),
-    path("car/search/", car_search, name="car_search"),
     path("car/create/", car_create, name="car_create"),
     path("car/<uuid:id>/apply/", car_apply, name="car_apply"),
     path("car/<uuid:id>/edit/", car_edit, name="car_edit"),
     path("car/<uuid:id>/delete/", car_delete, name="car_delete"),
+
+    # Applciations routing
+    path("applications/", applications, name="applications"),
+    path("applications/search/", applications_search, name="applications_search"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

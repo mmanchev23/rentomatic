@@ -2,14 +2,39 @@ from .models import *
 from django.db.models import Q
 from django.urls import reverse
 from dateutil.parser import parse
+from django.shortcuts import render
 from django.contrib import messages
 from django.db import IntegrityError
-from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
+from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialConnectView
+from dj_rest_auth.social_serializers import TwitterConnectSerializer
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
 
+# class GoogleLogin(SocialLoginView):
+#     adapter_class = GoogleOAuth2Adapter
+#     callback_url = CALLBACK_URL_YOU_SET_ON_GOOGLE
+#     client_class = OAuth2Client
+
+class FacebookConnect(SocialConnectView):
+    adapter_class = FacebookOAuth2Adapter
+
+class TwitterConnect(SocialConnectView):
+    serializer_class = TwitterConnectSerializer
+    adapter_class = TwitterOAuthAdapter
+
+# class GithubConnect(SocialConnectView):
+#     adapter_class = GitHubOAuth2Adapter
+#     callback_url = CALLBACK_URL_YOU_SET_ON_GITHUB
+#     client_class = OAuth2Client
 
 def index(request):
     return render(request, "app/index.html")
@@ -349,26 +374,20 @@ def profile_delete_submit(request, username):
 @login_required(redirect_field_name="sign_in/")
 def cars(request):
     cars = Car.objects.all()
-    applications = Application.objects.all()
 
     cars_paginator = Paginator(cars, 5)
-    applications_paginator = Paginator(applications, 5)
 
     page_number = request.GET.get("page")
 
     try:
         car_obj = cars_paginator.get_page(page_number)
-        application_obj = applications_paginator.get_page(page_number)
     except PageNotAnInteger:
         car_obj = cars_paginator.page(1)
-        application_obj = applications_paginator.page(1)
     except EmptyPage:
         car_obj = cars_paginator.page(cars_paginator.num_pages)
-        application_obj = applications_paginator.page(applications_paginator.num_pages)
 
     context = {
         "cars": car_obj,
-        "applications": application_obj,
     }
 
     return render(request, "app/cars.html", context)
@@ -386,7 +405,7 @@ def car_create(request):
         if "img" in request.FILES:
             picture = request.FILES.get("img")
         else:
-            picture = '../static/images/default_picture.png'
+            picture = "../static/images/default_picture.png"
 
         car = Car.objects.create(
             brand=brand,
@@ -453,6 +472,16 @@ def car_apply(request, id):
         car = Car.objects.get(pk=id) or None
         start_date = request.POST.get("start_date")
         end_date = request.POST.get("end_date")
+
+        applications = Application.objects.all()
+
+        for application in applications:
+            if parse(start_date).date() <= application.end_date and application.start_date <= parse(end_date).date() and application.car == car:
+                messages.error(request, f"The car is busy from {parse(start_date).date()} to {parse(end_date).date()}!")
+                return HttpResponseRedirect(reverse("cars"))
+            else:
+                pass
+
         application = Application.objects.create(user=user, car=car, start_date=start_date, end_date=end_date)
         application.save()
         messages.success(request, f"You have applied for {car.brand} {car.model} successfully!")
@@ -461,15 +490,33 @@ def car_apply(request, id):
         return render(request, "app/cars.html")
 
 @login_required(redirect_field_name="sign_in/")
-def car_search(request):
+def applications(request):
+    applications = Application.objects.all()
+
+    applications_paginator = Paginator(applications, 5)
+
+    page_number = request.GET.get("page")
+
+    try:
+        application_obj = applications_paginator.get_page(page_number)
+    except PageNotAnInteger:
+        application_obj = applications_paginator.page(1)
+    except EmptyPage:
+        application_obj = applications_paginator.page(applications_paginator.num_pages)
+
+    context = {
+        "applications": application_obj,
+    }
+
+    return render(request, "app/applications.html", context)
+
+@login_required(redirect_field_name="sign_in/")
+def applications_search(request):
     if request.method == "POST":
-        start_date = request.POST.get("start_date", "")
-        end_date = request.POST.get("end_date", "")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
 
-        mstart_date = parse(start_date)
-        mend_date= parse(end_date)
-
-        applications = Application.objects.filter(start_date__gt=mstart_date, end_date__lt=mend_date)
+        applications = Application.objects.filter(start_date__range=[start_date, end_date], end_date__range=[start_date, end_date])
 
         context = {
             "applications": applications,
@@ -477,9 +524,9 @@ def car_search(request):
 
         if applications.count() > 0:
             messages.success(request, f"Found {applications.count()} results!")
-            return render(request, "app/cars.html", context)
+            return render(request, "app/applications.html", context)
         else:
             messages.error(request, "No results were found!")
-            return render(request, "app/cars.html", context)
+            return render(request, "app/applications.html", context)
     else:
-        return render(request, "app/cars.html")
+        return render(request, "app/applications.html")

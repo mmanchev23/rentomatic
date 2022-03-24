@@ -15,6 +15,7 @@ pyyaml = "*"
 django-on-heroku = "*"
 whitenoise = "*"
 django-sslserver = "*"
+django-allauth = "*"
 
 [dev-packages]
 
