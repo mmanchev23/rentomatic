@@ -16,6 +16,7 @@ django-on-heroku = "*"
 whitenoise = "*"
 django-sslserver = "*"
 django-allauth = "*"
+gunicorn = "*"
 
 [dev-packages]
 
