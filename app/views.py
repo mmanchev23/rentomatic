@@ -39,6 +39,9 @@ class TwitterConnect(SocialConnectView):
 def index(request):
     return render(request, "app/index.html")
 
+def about(request):
+    return render(request, "app/about.html")
+
 def sign_up(request):
     return render(request, "app/sign_up.html")
 

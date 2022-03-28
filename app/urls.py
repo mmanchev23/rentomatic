@@ -11,6 +11,9 @@ urlpatterns = [
     # Index Route
     path("", index, name="index"),
 
+    # About Route
+    path("about/", about, name="about"),
+
     # Admin Route
     path("admin/", admin.site.urls, name="admin"),
 

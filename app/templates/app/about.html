@@ -1,0 +1,31 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-3">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <div class="col text-center">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h3>Exam project from module № 13 "Software Engineering" of the national training program "IT Career" in Bulgaria.</h3>
+                                <img src="{% static 'images/python3.png' %}" alt="Python 3" width="50">
+                                <img src="{% static 'images/django.png' %}" alt="Django" width="50">
+                                <img src="{% static 'images/sqlite3.png' %}" alt="SQLite 3" width="50">
+                                <img src="{% static 'images/postgresql.png' %}" alt="PostgreSQL" width="50">
+                                <img src="{% static 'images/html5.png' %}" alt="HTML 5" width="56">
+                                <img src="{% static 'images/css3.png' %}" alt="CSS 3" width="39">
+                                <img src="{% static 'images/bootstrap.png' %}" alt="Bootstrap" width="50">
+                                <img src="{% static 'images/javascript.png' %}" alt="Javascript" width="40">
+                                <img src="{% static 'images/jquery.png' %}" alt="JQuery" width="50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}}

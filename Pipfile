@@ -17,6 +17,7 @@ whitenoise = "*"
 django-sslserver = "*"
 django-allauth = "*"
 gunicorn = "*"
+django-social-auth = "*"
 
 [dev-packages]
 
